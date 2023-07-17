@@ -6,6 +6,7 @@ require (
 	github.com/bnb-chain/tss-lib v1.3.5
 	github.com/ethereum/go-ethereum v1.12.0
 	github.com/golang/protobuf v1.5.2
+	github.com/gorilla/websocket v1.4.2
 	github.com/ipfs/go-log v0.0.1
 )
 
