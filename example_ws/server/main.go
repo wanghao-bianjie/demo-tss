@@ -6,8 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bnb-chain/tss-lib/common"
+	"github.com/bnb-chain/tss-lib/ecdsa/keygen"
 	"github.com/bnb-chain/tss-lib/ecdsa/signing"
+	"github.com/bnb-chain/tss-lib/tss"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/golang/protobuf/proto"
+	"github.com/gorilla/websocket"
 	golog "github.com/ipfs/go-log"
 	"io/ioutil"
 	"log"
@@ -15,11 +19,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/bnb-chain/tss-lib/ecdsa/keygen"
-	"github.com/bnb-chain/tss-lib/tss"
-	"github.com/golang/protobuf/proto"
-	"github.com/gorilla/websocket"
 )
 
 var (
@@ -55,6 +54,7 @@ func handleWebSocketKeygen(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
+	now := time.Now()
 	updater := func(msg tss.Message, errCh chan<- *tss.Error) {
 		marshal, err := proto.Marshal(msg.WireMsg())
 		if err != nil {
@@ -146,6 +146,7 @@ keygen:
 
 	<-stop
 	log.Println("stop")
+	log.Println("keygen cost(ms)", time.Since(now).Milliseconds())
 }
 
 func handleWebSocketSign(w http.ResponseWriter, r *http.Request) {
@@ -157,6 +158,7 @@ func handleWebSocketSign(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
+	now := time.Now()
 	updater := func(msg tss.Message, errCh chan<- *tss.Error) {
 		marshal, err := proto.Marshal(msg.WireMsg())
 		if err != nil {
@@ -263,6 +265,7 @@ signing:
 
 	<-stop
 	log.Println("stop")
+	log.Println("sign cost(ms)", time.Since(now).Milliseconds())
 }
 
 func getPkAddress(key keygen.LocalPartySaveData) string {

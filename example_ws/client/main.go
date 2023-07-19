@@ -39,13 +39,18 @@ var (
 func main() {
 	golog.SetLogLevel("tss-lib", "info")
 
+	now := time.Now()
 	log.Println("------------------------keygen start------------------------")
 	fnkKeygen()
 	log.Println("------------------------keygen end------------------------")
 
+	log.Println("keygen cost(ms)", time.Since(now).Milliseconds())
+
+	now = time.Now()
 	log.Println("------------------------sign start------------------------")
 	fnSign()
 	log.Println("------------------------sign end------------------------")
+	log.Println("sign cost(ms)", time.Since(now).Milliseconds())
 }
 
 func fnkKeygen() {
